@@ -43,7 +43,7 @@ export class AdminComponent {
   }
 
   onSubmit() {
-    this.http.post(`${environment.apiUrl}/games/`, this.game)
+    this.http.post(`${environment.apiUrl}/games`, this.game)
       .subscribe({
         next: (response) => {
           alert('Game added successfully!');

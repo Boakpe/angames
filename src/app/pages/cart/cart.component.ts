@@ -70,13 +70,14 @@ export class CartComponent implements OnInit {
       const purchases = this.cartItems.map(item => ({
         userId: user.userId,
         gameId: parseInt(item.gameId),
-        purchase_price: item.price
+        purchasePrice: item.price
       }));
 
       // Send all purchase requests
       await Promise.all(
-        purchases.map(purchase => 
-          this.http.post(`${environment.apiUrl}/purchases/`, purchase).toPromise()
+        purchases.map(purchase => {
+          this.http.post(`${environment.apiUrl}/purchases`, purchase).toPromise()
+        }
         )
       );
 

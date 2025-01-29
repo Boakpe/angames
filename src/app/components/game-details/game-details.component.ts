@@ -181,7 +181,7 @@ export class GameDetailsComponent implements OnInit {
       comment: this.newRating.comment
     };
 
-    this.http.post<Rating>('${environment.apiUrl}/ratings/', ratingData).subscribe({
+    this.http.post<Rating>(`${environment.apiUrl}/ratings`, ratingData).subscribe({
       next: (response) => {
         this.ratings.unshift(response);
         this.calculateAverageRating();
