@@ -9,7 +9,10 @@ import { filter, Subscription } from 'rxjs';
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  animations: [
+    // You can add animations here if you want to enhance the menu transitions
+  ]
 })
 export class HeaderComponent implements OnDestroy {
   isMenuOpen = false;

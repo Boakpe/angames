@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin',
@@ -21,7 +24,18 @@ export class AdminComponent {
     discount_percentage: 0
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private router: Router
+  ) {
+    // Double-check admin status
+    this.userService.isAdmin$.pipe(take(1)).subscribe(isAdmin => {
+      if (!isAdmin) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   ngOnInit() {
     window.scrollTo(0, 0);

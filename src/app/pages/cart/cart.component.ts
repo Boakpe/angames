@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../services/user.service';
 
 interface CartItem {
   gameId: string;
@@ -20,12 +21,20 @@ interface CartItem {
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
   isLoading = false;
+  isLoggedIn = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadCart();
     window.scrollTo(0, 0);
+    this.userService.isLoggedIn$.subscribe(
+      status => this.isLoggedIn = status
+    );
   }
 
   loadCart() {
@@ -46,6 +55,12 @@ export class CartComponent implements OnInit {
   }
 
   async handleCheckout() {
+    if (!this.isLoggedIn) {
+      alert('Please log in or register to complete your purchase');
+      this.router.navigate(['/register']);
+      return;
+    }
+
     try {
       this.isLoading = true;
       const user = JSON.parse(localStorage.getItem('user') || '{}');
