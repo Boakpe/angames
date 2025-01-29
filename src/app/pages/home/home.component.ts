@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CardListComponent } from '../../components/card-list/card-list.component';
 import { CarouselComponent } from '../../components/carousel/carousel.component';
+import { HttpClient } from '@angular/common/http';
+import { Game } from '../../interfaces/game.interface';
 
 @Component({
   selector: 'app-home',
@@ -34,28 +36,41 @@ import { CarouselComponent } from '../../components/carousel/carousel.component'
     </div>
   `
 })
-export class HomeComponent {
-  promotions = Array(8).fill(null).map((_, i) => ({
-    id: `${i}`,
-    imageUrl: `https://picsum.photos/400/600?random=${i}`,
-    name: `Promotion Product ${i + 1}`,
-    price: 100 + i * 10,
-    discountPercentage: 15 + i
-  }));
+export class HomeComponent implements OnInit {
+  promotions: any[] = [];
+  newReleases: any[] = [];
+  popular: any[] = [];
 
-  newReleases = Array(8).fill(null).map((_, i) => ({
-    id: `${i}`,
-    imageUrl: `https://picsum.photos/400/600?random=${i + 10}`,
-    name: `New Release ${i + 1}`,
-    price: 200 + i * 20,
-    discountPercentage: 0
-  }));
+  constructor(private http: HttpClient) {}
 
-  popular = Array(8).fill(null).map((_, i) => ({
-    id: `${i}`,
-    imageUrl: `https://picsum.photos/400/600?random=${i + 20}`,
-    name: `Popular Item ${i + 1}`,
-    price: 150 + i * 15,
-    discountPercentage: i % 2 === 0 ? 10 : 0
-  }));
+  ngOnInit() {
+    this.fetchPromotions();
+    this.fetchNewReleases();
+    this.fetchPopular();
+  }
+
+  private formatGames(games: Game[]) {
+    return games.map(game => ({
+      id: game.game_id.toString(),
+      name: game.title,
+      price: game.price,
+      imageUrl: game.square_image_url,
+      discountPercentage: game.discount_percentage
+    }));
+  }
+
+  private fetchPromotions() {
+    this.http.get<Game[]>('http://localhost:8001/games?order=biggest_discount&limit=8')
+      .subscribe(games => this.promotions = this.formatGames(games));
+  }
+
+  private fetchNewReleases() {
+    this.http.get<Game[]>('http://localhost:8001/games?order=newest&limit=8')
+      .subscribe(games => this.newReleases = this.formatGames(games));
+  }
+
+  private fetchPopular() {
+    this.http.get<Game[]>('http://localhost:8001/games?order=most_sold&limit=8')
+      .subscribe(games => this.popular = this.formatGames(games));
+  }
 }

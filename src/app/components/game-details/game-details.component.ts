@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface Game {
-  id: string;
+  game_id: number;
   title: string;
   description: string;
   price: number;
   discount_percentage: number;
-  image_url: string;
+  widescreen_image_url: string;
+  square_image_url: string;
   copies_sold: number;
-  release_date: Date;
+  release_date: string;
 }
 
 interface CartItem {
@@ -24,51 +26,62 @@ interface CartItem {
 @Component({
   selector: 'app-game-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './game-details.component.html'
 })
 export class GameDetailsComponent implements OnInit {
   gameId: string | null = null;
-  game: Game = {
-    id: '1',
-    title: 'Elden Ring',
-    description: `ELDEN RING, developed by FromSoftware Inc. and produced by BANDAI NAMCO Entertainment Inc., 
-                 is a fantasy action-RPG and FromSoftware's largest game to date, set within a world full of mystery 
-                 and peril. In the Lands Between, danger and discovery await around every corner in FromSoftware's 
-                 largest game to date.`,
-    price: 59.99,
-    discount_percentage: 15,
-    image_url: 'https://cdn.akamai.steamstatic.com/steam/apps/1245620/header.jpg',
-    copies_sold: 20000000,
-    release_date: new Date('2022-02-25')
-  };
+  game?: Game;
+  isLoading = true;
+  error: string | null = null;
   isInCart: boolean = false;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     this.gameId = this.route.snapshot.paramMap.get('id');
-    this.checkIfInCart();
+    if (this.gameId) {
+      this.fetchGame(this.gameId);
+    }
     window.scrollTo(0, 0);
   }
 
+  private fetchGame(id: string) {
+    this.http.get<Game>(`http://localhost:8001/games/${id}`).subscribe({
+      next: (data) => {
+        this.game = data;
+        this.isLoading = false;
+        this.checkIfInCart();
+      },
+      error: (error) => {
+        this.error = 'Failed to load game details';
+        this.isLoading = false;
+        console.error('Error fetching game:', error);
+      }
+    });
+  }
+
   checkIfInCart(): boolean {
+    if (!this.game) return false;
     const cartItems: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
-    this.isInCart = cartItems.some(item => item.gameId === this.game.id);
+    this.isInCart = cartItems.some(item => item.gameId === this.game!.game_id.toString());
     return this.isInCart;
   }
 
   addToCart() {
-    if (this.checkIfInCart()) return;
+    if (!this.game || this.checkIfInCart()) return;
 
     const cartItems: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
     
     const cartItem: CartItem = {
-      gameId: this.game.id,
+      gameId: this.game.game_id.toString(),
       title: this.game.title,
       price: this.game.price * (1 - this.game.discount_percentage / 100),
       quantity: 1,
-      image_url: this.game.image_url
+      image_url: this.game.widescreen_image_url
     };
 
     cartItems.push(cartItem);
