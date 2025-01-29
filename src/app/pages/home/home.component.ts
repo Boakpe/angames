@@ -61,17 +61,17 @@ export class HomeComponent implements OnInit {
   }
 
   private fetchPromotions() {
-    this.http.get<Game[]>('http://localhost:8001/games?order=biggest_discount&limit=8')
+    this.http.get<Game[]>('http://localhost:8001/games?order=biggest_discount&limit=5')
       .subscribe(games => this.promotions = this.formatGames(games));
   }
 
   private fetchNewReleases() {
-    this.http.get<Game[]>('http://localhost:8001/games?order=newest&limit=8')
+    this.http.get<Game[]>('http://localhost:8001/games?order=newest&limit=5')
       .subscribe(games => this.newReleases = this.formatGames(games));
   }
 
   private fetchPopular() {
-    this.http.get<Game[]>('http://localhost:8001/games?order=most_sold&limit=8')
+    this.http.get<Game[]>('http://localhost:8001/games?order=most_sold&limit=5')
       .subscribe(games => this.popular = this.formatGames(games));
   }
 }

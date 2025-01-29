@@ -6,6 +6,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { GamesComponent } from './pages/games/games.component';
+import { AccountComponent } from './pages/account/account.component';
 
 
 export const routes: Routes = [
@@ -36,5 +37,9 @@ export const routes: Routes = [
   {
     path: 'games',
     component: GamesComponent,
+  },
+  {
+    path: 'account',
+    component: AccountComponent,
   }
 ];
