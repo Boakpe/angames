@@ -23,6 +23,15 @@ interface CartItem {
   image_url: string;
 }
 
+interface Rating {
+  user_id: number;
+  game_id: number;
+  rating: number;
+  comment: string;
+  rating_id: number;
+  created_at: string;
+}
+
 @Component({
   selector: 'app-game-details',
   standalone: true,
@@ -36,6 +45,8 @@ export class GameDetailsComponent implements OnInit {
   error: string | null = null;
   isInCart: boolean = false;
   isOwned: boolean = false;
+  ratings: Rating[] = [];
+  averageRating: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +57,7 @@ export class GameDetailsComponent implements OnInit {
     this.gameId = this.route.snapshot.paramMap.get('id');
     if (this.gameId) {
       this.fetchGame(this.gameId);
+      this.fetchRatings(this.gameId);
     }
     window.scrollTo(0, 0);
     this.checkGameOwnership();
@@ -64,6 +76,33 @@ export class GameDetailsComponent implements OnInit {
         console.error('Error fetching game:', error);
       }
     });
+  }
+
+  private fetchRatings(gameId: string) {
+    this.http.get<Rating[]>(`http://localhost:8001/games/${gameId}/ratings`).subscribe({
+      next: (data) => {
+        this.ratings = data;
+        this.calculateAverageRating();
+      },
+      error: (error) => {
+        console.error('Error fetching ratings:', error);
+      }
+    });
+  }
+
+  private calculateAverageRating() {
+    if (this.ratings.length === 0) {
+      this.averageRating = 0;
+      return;
+    }
+    const sum = this.ratings.reduce((acc, rating) => acc + rating.rating, 0);
+    // Make the average rating an integer
+    this.averageRating = Math.round(sum / this.ratings.length);
+  }
+
+  getStarsArray(rating: number): number[] {
+    const roundedRating = Math.round(rating);
+    return [1, 2, 3, 4, 5].map(i => i <= roundedRating ? 1 : 0);
   }
 
   private checkGameOwnership() {
