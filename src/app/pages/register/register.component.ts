@@ -9,6 +9,7 @@ import {
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -38,7 +39,7 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.http
-        .post('http://localhost:8001/users/', this.registerForm.value)
+        .post(`${environment.apiUrl}/users`, this.registerForm.value)
         .subscribe({
           next: (response: any) => {
             this.userService.login(response);

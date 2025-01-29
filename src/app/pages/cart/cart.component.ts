@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
+import { environment } from '../../../environments/environment';
 
 interface CartItem {
   gameId: string;
@@ -67,15 +68,15 @@ export class CartComponent implements OnInit {
       
       // Create purchases for each game in cart
       const purchases = this.cartItems.map(item => ({
-        user_id: user.user_id,
-        game_id: parseInt(item.gameId),
+        userId: user.userId,
+        gameId: parseInt(item.gameId),
         purchase_price: item.price
       }));
 
       // Send all purchase requests
       await Promise.all(
         purchases.map(purchase => 
-          this.http.post('http://localhost:8001/purchases/', purchase).toPromise()
+          this.http.post(`${environment.apiUrl}/purchases/`, purchase).toPromise()
         )
       );
 

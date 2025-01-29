@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CardListComponent } from '../../components/card-list/card-list.component';
 import { Game } from '../../interfaces/game.interface';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-account',
@@ -23,14 +24,14 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.userData?.user_id) {
+    if (this.userData?.userId) {
       this.fetchOwnedGames();
     }
     window.scrollTo(0, 0);
   }
 
   private fetchOwnedGames() {
-    this.http.get<Game[]>(`http://localhost:8001/users/${this.userData.user_id}/games`)
+    this.http.get<Game[]>(`${environment.apiUrl}/users/${this.userData.userId}/games`)
       .subscribe({
         next: (games) => {
           this.ownedGames = games;
@@ -43,11 +44,11 @@ export class AccountComponent implements OnInit {
 
   get formattedGames() {
     return this.ownedGames.map(game => ({
-      id: game.game_id.toString(),
+      id: game.gameId.toString(),
       name: game.title,
       price: game.price,
-      imageUrl: game.square_image_url,
-      discountPercentage: game.discount_percentage
+      imageUrl: game.squareImageUrl,
+      discountPercentage: game.discountPercentage
     }));
   }
 }

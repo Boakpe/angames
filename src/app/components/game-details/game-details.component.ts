@@ -3,17 +3,18 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 interface Game {
-  game_id: number;
+  gameId: number;
   title: string;
   description: string;
   price: number;
-  discount_percentage: number;
-  widescreen_image_url: string;
-  square_image_url: string;
-  copies_sold: number;
-  release_date: string;
+  discountPercentage: number;
+  widescreenImageUrl: string;
+  squareImageUrl: string;
+  copiesSold: number;
+  releaseDate: string;
 }
 
 interface CartItem {
@@ -25,12 +26,12 @@ interface CartItem {
 }
 
 interface Rating {
-  user_id: number;
-  game_id: number;
+  userId: number;
+  gameId: number;
   rating: number;
   comment: string;
   rating_id: number;
-  created_at: string;
+  createdAt: string;
 }
 
 @Component({
@@ -70,14 +71,14 @@ export class GameDetailsComponent implements OnInit {
     window.scrollTo(0, 0);
     this.checkGameOwnership();
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.userId = user.user_id || null;
+    this.userId = user.userId || null;
     if (this.userId && this.gameId) {
       this.checkIfUserRated();
     }
   }
 
   private fetchGame(id: string) {
-    this.http.get<Game>(`http://localhost:8001/games/${id}`).subscribe({
+    this.http.get<Game>(`${environment.apiUrl}/games/${id}`).subscribe({
       next: (data) => {
         this.game = data;
         this.isLoading = false;
@@ -92,7 +93,7 @@ export class GameDetailsComponent implements OnInit {
   }
 
   private fetchRatings(gameId: string) {
-    this.http.get<Rating[]>(`http://localhost:8001/games/${gameId}/ratings`).subscribe({
+    this.http.get<Rating[]>(`${environment.apiUrl}/games/${gameId}/ratings`).subscribe({
       next: (data) => {
         this.ratings = data;
         this.calculateAverageRating();
@@ -120,8 +121,8 @@ export class GameDetailsComponent implements OnInit {
 
   private checkGameOwnership() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.user_id && this.gameId) {
-      this.http.get<{owns_game: boolean}>(`http://localhost:8001/purchases/verify/${user.user_id}/${this.gameId}`).subscribe({
+    if (user.userId && this.gameId) {
+      this.http.get<{owns_game: boolean}>(`${environment.apiUrl}/purchases/verify/${user.userId}/${this.gameId}`).subscribe({
         next: (response) => {
           this.isOwned = response.owns_game;
         },
@@ -135,7 +136,7 @@ export class GameDetailsComponent implements OnInit {
   checkIfInCart(): boolean {
     if (!this.game) return false;
     const cartItems: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
-    this.isInCart = cartItems.some(item => item.gameId === this.game!.game_id.toString());
+    this.isInCart = cartItems.some(item => item.gameId === this.game!.gameId.toString());
     return this.isInCart;
   }
 
@@ -145,11 +146,11 @@ export class GameDetailsComponent implements OnInit {
     const cartItems: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
     
     const cartItem: CartItem = {
-      gameId: this.game.game_id.toString(),
+      gameId: this.game.gameId.toString(),
       title: this.game.title,
-      price: this.game.price * (1 - this.game.discount_percentage / 100),
+      price: this.game.price * (1 - this.game.discountPercentage / 100),
       quantity: 1,
-      image_url: this.game.widescreen_image_url
+      image_url: this.game.widescreenImageUrl
     };
 
     cartItems.push(cartItem);
@@ -160,7 +161,7 @@ export class GameDetailsComponent implements OnInit {
   private checkIfUserRated() {
     if (!this.userId || !this.gameId) return;
     
-    this.http.get<{has_rated: boolean}>(`http://localhost:8001/ratings/verify/${this.userId}/${this.gameId}`).subscribe({
+    this.http.get<{has_rated: boolean}>(`${environment.apiUrl}/ratings/verify/${this.userId}/${this.gameId}`).subscribe({
       next: (response) => {
         this.hasAlreadyRated = response.has_rated;
       },
@@ -174,13 +175,13 @@ export class GameDetailsComponent implements OnInit {
     if (!this.game || !this.userId || this.hasAlreadyRated) return;
 
     const ratingData = {
-      user_id: this.userId,
-      game_id: this.game.game_id,
+      userId: this.userId,
+      gameId: this.game.gameId,
       rating: this.newRating.rating,
       comment: this.newRating.comment
     };
 
-    this.http.post<Rating>('http://localhost:8001/ratings/', ratingData).subscribe({
+    this.http.post<Rating>('${environment.apiUrl}/ratings/', ratingData).subscribe({
       next: (response) => {
         this.ratings.unshift(response);
         this.calculateAverageRating();

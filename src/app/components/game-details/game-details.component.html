@@ -26,7 +26,7 @@
           ></div>
           <img
             class="h-full w-full object-cover transition-transform duration-700 hover:scale-105 object-center "
-            [src]="game.widescreen_image_url"
+            [src]="game.widescreenImageUrl"
             [alt]="game.title"
           />
         </div>
@@ -58,7 +58,7 @@
                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-                {{ game.release_date | date : "mediumDate" }}
+                {{ game.releaseDate | date : "mediumDate" }}
               </p>
             </div>
 
@@ -68,14 +68,14 @@
             >
               <div class="flex items-center justify-end gap-3">
                 <span
-                  *ngIf="game.discount_percentage > 0"
+                  *ngIf="game.discountPercentage > 0"
                   class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-lg pulse"
                 >
-                  -{{ game.discount_percentage }}%
+                  -{{ game.discountPercentage }}%
                 </span>
                 <div class="text-right">
                   <p
-                    *ngIf="game.discount_percentage > 0"
+                    *ngIf="game.discountPercentage > 0"
                     class="text-sm text-neutral-400 line-through"
                   >
                     ${{ game.price }}
@@ -84,7 +84,7 @@
                     ${{
                       (
                         game.price *
-                        (1 - game.discount_percentage / 100)
+                        (1 - game.discountPercentage / 100)
                       ).toFixed(2)
                     }}
                   </p>
@@ -121,7 +121,7 @@
                   </svg>
                 </span>
                 <span class="text-neutral-300"
-                  >{{ game.copies_sold.toLocaleString() }} copies sold</span
+                  >{{ game.copiesSold.toLocaleString() }} copies sold</span
                 >
               </div>
             </div>
@@ -274,7 +274,7 @@
               </ng-container>
             </div>
             <span class="text-neutral-400 text-sm">
-              {{ rating.created_at | date:'mediumDate' }}
+              {{ rating.createdAt | date:'mediumDate' }}
             </span>
           </div>
           <p class="text-neutral-300">{{ rating.comment }}</p>

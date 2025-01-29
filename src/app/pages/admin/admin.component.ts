@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -18,10 +19,10 @@ export class AdminComponent {
     title: '',
     price: 0,
     description: '',
-    widescreen_image_url: '',
-    square_image_url: '',
-    release_date: '',
-    discount_percentage: 0
+    widescreenImageUrl: '',
+    squareImageUrl: '',
+    releaseDate: '',
+    discountPercentage: 0
   };
 
   constructor(
@@ -42,7 +43,7 @@ export class AdminComponent {
   }
 
   onSubmit() {
-    this.http.post('http://localhost:8001/games/', this.game)
+    this.http.post(`${environment.apiUrl}/games/`, this.game)
       .subscribe({
         next: (response) => {
           alert('Game added successfully!');
@@ -51,10 +52,10 @@ export class AdminComponent {
             title: '',
             price: 0,
             description: '',
-            widescreen_image_url: '',
-            square_image_url: '',
-            release_date: '',
-            discount_percentage: 0
+            widescreenImageUrl: '',
+            squareImageUrl: '',
+            releaseDate: '',
+            discountPercentage: 0
           };
         },
         error: (error) => {

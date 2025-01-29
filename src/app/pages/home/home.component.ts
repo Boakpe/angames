@@ -3,6 +3,7 @@ import { CardListComponent } from '../../components/card-list/card-list.componen
 import { CarouselComponent } from '../../components/carousel/carousel.component';
 import { HttpClient } from '@angular/common/http';
 import { Game } from '../../interfaces/game.interface';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -52,26 +53,26 @@ export class HomeComponent implements OnInit {
 
   private formatGames(games: Game[]) {
     return games.map(game => ({
-      id: game.game_id.toString(),
+      id: game.gameId.toString(),
       name: game.title,
       price: game.price,
-      imageUrl: game.square_image_url,
-      discountPercentage: game.discount_percentage
+      imageUrl: game.squareImageUrl,
+      discountPercentage: game.discountPercentage
     }));
   }
 
   private fetchPromotions() {
-    this.http.get<Game[]>('http://localhost:8001/games?order=biggest_discount&limit=5')
+    this.http.get<Game[]>(`${environment.apiUrl}/games?order=biggest_discount&limit=5`)
       .subscribe(games => this.promotions = this.formatGames(games));
   }
 
   private fetchNewReleases() {
-    this.http.get<Game[]>('http://localhost:8001/games?order=newest&limit=5')
+    this.http.get<Game[]>(`${environment.apiUrl}/games?order=newest&limit=5`)
       .subscribe(games => this.newReleases = this.formatGames(games));
   }
 
   private fetchPopular() {
-    this.http.get<Game[]>('http://localhost:8001/games?order=most_sold&limit=5')
+    this.http.get<Game[]>(`${environment.apiUrl}/games?order=most_sold&limit=5`)
       .subscribe(games => this.popular = this.formatGames(games));
   }
 }

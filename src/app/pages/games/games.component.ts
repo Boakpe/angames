@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CardListComponent } from '../../components/card-list/card-list.component';
 import { Game } from '../../interfaces/game.interface';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-games',
@@ -22,7 +23,7 @@ export class GamesComponent implements OnInit {
   }
 
   private fetchGames() {
-    this.http.get<Game[]>('http://localhost:8001/games')
+    this.http.get<Game[]>(`${environment.apiUrl}/games`)
       .subscribe({
         next: (games) => {
           this.games = games;
@@ -35,11 +36,11 @@ export class GamesComponent implements OnInit {
 
   get formattedGames() {
     return this.games.map(game => ({
-      id: game.game_id.toString(),
+      id: game.gameId.toString(),
       name: game.title,
       price: game.price,
-      imageUrl: game.square_image_url,
-      discountPercentage: game.discount_percentage
+      imageUrl: game.squareImageUrl,
+      discountPercentage: game.discountPercentage,
     }));
   }
 }
