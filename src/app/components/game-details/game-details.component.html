@@ -13,7 +13,7 @@
     <!-- Game Card -->
     <div
       *ngIf="game && !isLoading && !error"
-      class="bg-neutral-800 rounded-none overflow-hidden border border-neutral-700 transform transition-all duration-300 hover:border-neutral-600"
+      class="bg-neutral-800 rounded-lg overflow-hidden border border-neutral-700 transform transition-all duration-300 hover:border-neutral-600"
     >
       <div class="md:grid md:grid-cols-5 md:gap-0">
         <!-- Image Section with Enhanced Gradient Overlay -->
@@ -64,12 +64,12 @@
 
             <!-- Price Section -->
             <div
-              class="text-right bg-neutral-900/50 p-4 rounded-none backdrop-blur-sm"
+              class="text-right bg-neutral-900/50 p-4 rounded-lg backdrop-blur-sm"
             >
               <div class="flex items-center justify-end gap-3">
                 <span
                   *ngIf="game.discount_percentage > 0"
-                  class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-none pulse"
+                  class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-lg pulse"
                 >
                   -{{ game.discount_percentage }}%
                 </span>
@@ -131,9 +131,9 @@
               *ngIf="!isOwned"
               (click)="addToCart()"
               [disabled]="isInCart"
-              class="w-full sm:w-auto group relative px-8 py-3 transition-all duration-300 ease-out rounded-none disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800"
+              class="w-full sm:w-auto group relative px-8 py-3 transition-all duration-300 ease-out rounded-lg disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800"
               [ngClass]="{
-                'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 hover:scale-105 active:scale-95 hover:cursor-pointer':
+                'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 hover:scale-105 active:scale-95 hover:cursor-pointer':
                   !isInCart,
                 'bg-green-600 hover:bg-green-700': isInCart
               }"
@@ -221,7 +221,7 @@
               <select 
                 [(ngModel)]="newRating.rating"
                 name="rating"
-                class="bg-neutral-700 text-white px-3 py-2 rounded-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                class="bg-neutral-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               >
                 <option [value]="5">5 - Excellent</option>
@@ -239,7 +239,7 @@
               [(ngModel)]="newRating.comment"
               name="comment"
               rows="4"
-              class="w-full bg-neutral-700 text-white px-3 py-2 rounded-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+              class="w-full bg-neutral-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
               minlength="10"
             ></textarea>
@@ -252,7 +252,7 @@
           <button
             type="submit"
             [disabled]="!ratingForm.valid"
-            class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Submit Review
           </button>

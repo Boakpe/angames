@@ -25,4 +25,16 @@ export class UserService {
       this.isAdminSubject.next(false);
     }
   }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.isLoggedInSubject.next(false);
+    this.isAdminSubject.next(false);
+  }
+
+  login(userData: any) {
+    localStorage.setItem('user', JSON.stringify(userData));
+    this.isLoggedInSubject.next(true);
+    this.isAdminSubject.next(userData.admin || false);
+  }
 }

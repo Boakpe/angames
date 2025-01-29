@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +25,11 @@ export class RegisterComponent {
 
   registrationError: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     window.scrollTo(0, 0);
@@ -36,10 +41,7 @@ export class RegisterComponent {
         .post('http://localhost:8001/users/', this.registerForm.value)
         .subscribe({
           next: (response: any) => {
-            // Save the entire response to local storage
-            localStorage.setItem('user', JSON.stringify(response));
-
-            // Redirect to home or another page
+            this.userService.login(response);
             this.router.navigate(['/']);
           },
           error: (error) => {

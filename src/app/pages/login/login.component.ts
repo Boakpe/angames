@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,11 @@ export class LoginComponent {
 
   loginError: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     window.scrollTo(0, 0);
@@ -29,7 +34,7 @@ export class LoginComponent {
       this.http.post('http://localhost:8001/login/', this.loginForm.value)
         .subscribe({
           next: (response: any) => {
-            localStorage.setItem('user', JSON.stringify(response));
+            this.userService.login(response);
             this.router.navigate(['/']);
           },
           error: (error) => {
