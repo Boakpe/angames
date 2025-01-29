@@ -35,6 +35,7 @@ export class GameDetailsComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
   isInCart: boolean = false;
+  isOwned: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,6 +48,7 @@ export class GameDetailsComponent implements OnInit {
       this.fetchGame(this.gameId);
     }
     window.scrollTo(0, 0);
+    this.checkGameOwnership();
   }
 
   private fetchGame(id: string) {
@@ -64,6 +66,20 @@ export class GameDetailsComponent implements OnInit {
     });
   }
 
+  private checkGameOwnership() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.user_id && this.gameId) {
+      this.http.get<{owns_game: boolean}>(`http://localhost:8001/purchases/verify/${user.user_id}/${this.gameId}`).subscribe({
+        next: (response) => {
+          this.isOwned = response.owns_game;
+        },
+        error: (error) => {
+          console.error('Error checking game ownership:', error);
+        }
+      });
+    }
+  }
+
   checkIfInCart(): boolean {
     if (!this.game) return false;
     const cartItems: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -72,7 +88,7 @@ export class GameDetailsComponent implements OnInit {
   }
 
   addToCart() {
-    if (!this.game || this.checkIfInCart()) return;
+    if (!this.game || this.checkIfInCart() || this.isOwned) return;
 
     const cartItems: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
     

@@ -86,14 +86,16 @@
             <span class="text-2xl text-white font-bold">${{ getTotal().toFixed(2) }}</span>
           </div>
         </div>
-        <button class="w-full mt-6 px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-none 
+        <button (click)="handleCheckout()" 
+          [disabled]="isLoading"
+          class="w-full mt-6 px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-none 
           hover:from-indigo-600 hover:to-purple-700 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200
-          focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-neutral-800">
+          focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed">
           <span class="flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
             </svg>
-            Proceed to Checkout
+            {{ isLoading ? 'Processing...' : 'Proceed to Checkout' }}
           </span>
         </button>
         <p class="mt-4 text-center text-sm text-neutral-400">

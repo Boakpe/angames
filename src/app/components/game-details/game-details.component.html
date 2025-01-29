@@ -128,6 +128,7 @@
 
             <!-- Add to Cart Button -->
             <button
+              *ngIf="!isOwned"
               (click)="addToCart()"
               [disabled]="isInCart"
               class="w-full sm:w-auto group relative px-8 py-3 transition-all duration-300 ease-out rounded-none disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800"
@@ -165,6 +166,14 @@
                 {{ isInCart ? "In Cart" : "Add to Cart" }}
               </span>
             </button>
+            <div *ngIf="isOwned" class="w-full sm:w-auto">
+              <span class="flex items-center gap-2 text-green-500 font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                You own this game
+              </span>
+            </div>
           </div>
         </div>
       </div>
