@@ -49,6 +49,7 @@ export class GameDetailsComponent implements OnInit {
   ngOnInit() {
     this.gameId = this.route.snapshot.paramMap.get('id');
     this.checkIfInCart();
+    window.scrollTo(0, 0);
   }
 
   checkIfInCart(): boolean {

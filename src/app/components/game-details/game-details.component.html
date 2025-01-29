@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto">
     <!-- Game Card -->
     <div
-      class="bg-neutral-800 rounded-none shadow-2xl overflow-hidden border border-neutral-700 transform transition-all duration-300 hover:shadow-3xl hover:border-neutral-600"
+      class="bg-neutral-800 rounded-none overflow-hidden border border-neutral-700 transform transition-all duration-300  hover:border-neutral-600"
     >
       <div class="md:grid md:grid-cols-5 md:gap-0">
         <!-- Image Section with Enhanced Gradient Overlay -->
@@ -121,7 +121,7 @@
               [disabled]="isInCart"
               class="w-full sm:w-auto group relative px-8 py-3 transition-all duration-300 ease-out rounded-none disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800"
               [ngClass]="{
-                'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 hover:scale-105 active:scale-95':
+                'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 hover:scale-105 active:scale-95 hover:cursor-pointer':
                   !isInCart,
                 'bg-green-600 hover:bg-green-700': isInCart
               }"
