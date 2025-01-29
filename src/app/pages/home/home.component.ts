@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
     this.fetchPromotions();
     this.fetchNewReleases();
     this.fetchPopular();
+    window.scrollTo(0, 0);
   }
 
   private formatGames(games: Game[]) {

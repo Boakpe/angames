@@ -25,6 +25,7 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.loadCart();
+    window.scrollTo(0, 0);
   }
 
   loadCart() {

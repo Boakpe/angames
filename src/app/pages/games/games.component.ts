@@ -18,6 +18,7 @@ export class GamesComponent implements OnInit {
 
   ngOnInit() {
     this.fetchGames();
+    window.scrollTo(0, 0);
   }
 
   private fetchGames() {

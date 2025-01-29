@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 interface Game {
   game_id: number;
@@ -35,7 +36,7 @@ interface Rating {
 @Component({
   selector: 'app-game-details',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './game-details.component.html'
 })
 export class GameDetailsComponent implements OnInit {
@@ -47,6 +48,13 @@ export class GameDetailsComponent implements OnInit {
   isOwned: boolean = false;
   ratings: Rating[] = [];
   averageRating: number = 0;
+  newRating = {
+    rating: 5,
+    comment: ''
+  };
+  ratingError: string | null = null;
+  userId: number | null = null;
+  hasAlreadyRated: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,6 +69,11 @@ export class GameDetailsComponent implements OnInit {
     }
     window.scrollTo(0, 0);
     this.checkGameOwnership();
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userId = user.user_id || null;
+    if (this.userId && this.gameId) {
+      this.checkIfUserRated();
+    }
   }
 
   private fetchGame(id: string) {
@@ -142,5 +155,42 @@ export class GameDetailsComponent implements OnInit {
     cartItems.push(cartItem);
     localStorage.setItem('cart', JSON.stringify(cartItems));
     this.isInCart = true;
+  }
+
+  private checkIfUserRated() {
+    if (!this.userId || !this.gameId) return;
+    
+    this.http.get<{has_rated: boolean}>(`http://localhost:8001/ratings/verify/${this.userId}/${this.gameId}`).subscribe({
+      next: (response) => {
+        this.hasAlreadyRated = response.has_rated;
+      },
+      error: (error) => {
+        console.error('Error checking if user rated:', error);
+      }
+    });
+  }
+
+  submitRating() {
+    if (!this.game || !this.userId || this.hasAlreadyRated) return;
+
+    const ratingData = {
+      user_id: this.userId,
+      game_id: this.game.game_id,
+      rating: this.newRating.rating,
+      comment: this.newRating.comment
+    };
+
+    this.http.post<Rating>('http://localhost:8001/ratings/', ratingData).subscribe({
+      next: (response) => {
+        this.ratings.unshift(response);
+        this.calculateAverageRating();
+        this.newRating = { rating: 5, comment: '' };
+        this.ratingError = null;
+      },
+      error: (error) => {
+        this.ratingError = error.error.detail || 'Failed to submit rating';
+        console.error('Error submitting rating:', error);
+      }
+    });
   }
 }

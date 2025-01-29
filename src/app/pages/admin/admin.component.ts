@@ -23,6 +23,10 @@ export class AdminComponent {
 
   constructor(private http: HttpClient) {}
 
+  ngOnInit() {
+    window.scrollTo(0, 0);
+  }
+
   onSubmit() {
     this.http.post('http://localhost:8001/games/', this.game)
       .subscribe({

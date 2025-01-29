@@ -20,6 +20,10 @@ export class LoginComponent {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  ngOnInit() {
+    window.scrollTo(0, 0);
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
       this.http.post('http://localhost:8001/login/', this.loginForm.value)

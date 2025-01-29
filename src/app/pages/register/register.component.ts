@@ -26,6 +26,10 @@ export class RegisterComponent {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  ngOnInit() {
+    window.scrollTo(0, 0);
+  }
+
   onSubmit() {
     if (this.registerForm.valid) {
       this.http

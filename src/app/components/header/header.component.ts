@@ -11,5 +11,11 @@ import { UserService } from '../../services/user.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+  isMenuOpen = false;
+
   constructor(public userService: UserService) {}
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }
